@@ -39,7 +39,7 @@ public class VehicleController {
     @PreAuthorize("hasRole('SUPERVISOR')")
     public ResponseEntity<VehicleResponse> createVehicle(@RequestBody VehicleRequest request) {
         Vehicle vehicle = convertToEntity(request);
-        Vehicle savedVehicle = vehicleService.createVehicle(vehicle);
+        Vehicle savedVehicle = vehicleService.createVehicle(vehicle, request.getScheduleTypeId());
         return ResponseEntity.ok(convertToResponse(savedVehicle));
     }
 
@@ -92,6 +92,18 @@ public class VehicleController {
                 .model(request.getModel())
                 .year(request.getYear())
                 .type(request.getType())
+                .status(VehicleStatus.NORMAL)  // Set default status
                 .build();
     }
+    
+    @GetMapping("/status/{status}")
+    public ResponseEntity<List<VehicleResponse>> getVehiclesByStatus(
+            @PathVariable VehicleStatus status) {
+        List<VehicleResponse> vehicles = vehicleService.getVehiclesByStatus(status)
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(vehicles);
+    }
+    
 }

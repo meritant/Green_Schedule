@@ -1,5 +1,6 @@
 package com.greenschedule.service;
 
+import com.greenschedule.model.entity.ScheduleType;
 import com.greenschedule.model.entity.Vehicle;
 import com.greenschedule.model.entity.VehicleStatus;
 import com.greenschedule.repository.VehicleRepository;
@@ -16,6 +17,8 @@ import java.util.UUID;
 public class VehicleService {
     
     private final VehicleRepository vehicleRepository;
+    private final ScheduleTypeService scheduleTypeService; 
+
 
     public List<Vehicle> getAllVehicles() {
         return vehicleRepository.findAll();
@@ -32,13 +35,26 @@ public class VehicleService {
     }
 
     @Transactional
-    public Vehicle createVehicle(Vehicle vehicle) {
+    public Vehicle createVehicle(Vehicle vehicle, UUID scheduleTypeId) {
         if (vehicleRepository.existsByVehicleNumber(vehicle.getVehicleNumber())) {
             throw new RuntimeException("Vehicle number already exists");
         }
         if (vehicleRepository.existsByLicensePlate(vehicle.getLicensePlate())) {
             throw new RuntimeException("License plate already exists");
         }
+        
+        
+     // Set default status
+        if (vehicle.getStatus() == null) {
+            vehicle.setStatus(VehicleStatus.NORMAL);
+        }
+
+        // Set schedule type if provided
+        if (scheduleTypeId != null) {
+            ScheduleType scheduleType = scheduleTypeService.getScheduleTypeById(scheduleTypeId);
+            vehicle.setScheduleType(scheduleType);
+        }
+        
         return vehicleRepository.save(vehicle);
     }
 
@@ -54,6 +70,10 @@ public class VehicleService {
         if (!vehicle.getLicensePlate().equals(vehicleDetails.getLicensePlate()) &&
             vehicleRepository.existsByLicensePlate(vehicleDetails.getLicensePlate())) {
             throw new RuntimeException("License plate already exists");
+        }
+        
+        if (vehicle.getStatus() == null) {
+            vehicle.setStatus(VehicleStatus.NORMAL);
         }
 
         vehicle.setVehicleNumber(vehicleDetails.getVehicleNumber());
