@@ -15,7 +15,7 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-# Security override for testing without new password each startup
+  # Security override for testing without new password each startup
   security:
     user:
       name: user
