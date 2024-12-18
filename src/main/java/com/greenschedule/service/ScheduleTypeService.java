@@ -37,6 +37,18 @@ public class ScheduleTypeService {
         }
         return scheduleTypeRepository.save(scheduleType);
     }
+    
+    @Transactional
+    public ScheduleType createIfNotExists(String name, String description) {
+        return scheduleTypeRepository.findByName(name)
+                .orElseGet(() -> {
+                    ScheduleType scheduleType = ScheduleType.builder()
+                            .name(name)
+                            .description(description)
+                            .build();
+                    return scheduleTypeRepository.save(scheduleType);
+                });
+    }
 
     @Transactional
     public ScheduleType updateScheduleType(UUID id, ScheduleType scheduleTypeDetails) {
