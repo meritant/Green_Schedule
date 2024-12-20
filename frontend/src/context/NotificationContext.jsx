@@ -16,14 +16,25 @@ export function NotificationProvider({ children }) {
   return (
     <NotificationContext.Provider value={{ showNotification }}>
       {children}
-      <Notification
-        show={notification.show}
-        type={notification.type}
-        message={notification.message}
-        onClose={() => setNotification({ show: false })}
-      />
+      {notification.show && (
+        <div className="fixed top-4 right-4 z-50">
+          <div className={`p-4 rounded-md ${
+            notification.type === 'success' 
+              ? 'bg-green-50 text-green-800' 
+              : 'bg-red-50 text-red-800'
+          }`}>
+            {notification.message}
+          </div>
+        </div>
+      )}
     </NotificationContext.Provider>
   );
 }
 
-export const useNotification = () => useContext(NotificationContext);
+export const useNotification = () => {
+  const context = useContext(NotificationContext);
+  if (!context) {
+    throw new Error('useNotification must be used within a NotificationProvider');
+  }
+  return context;
+};
