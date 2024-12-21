@@ -120,8 +120,8 @@ function DefectReportList() {
                     <tr>
                       <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Report #</th>
                       <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Vehicle</th>
-                      <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Part</th>
-                      <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Defect</th>
+                      {/* <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Part</th> */}
+                      {/* <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Defect</th> */}
                       <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Severity</th>
                       {user.role === 'SUPERVISOR' && (
                         <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Reported By</th>
@@ -142,12 +142,12 @@ function DefectReportList() {
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {report.vehicleNumber}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                        {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {report.partName}
                         </td>
                         <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                           {report.defectDescription}
-                        </td>
+                        </td> */}
                         <td className="whitespace-nowrap px-3 py-4 text-sm">
                           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             report.majorDefect 
