@@ -55,6 +55,10 @@ public class DefectReportService {
 
         return report;
     }
+    
+    public List<DefectReport> getAllReports() {
+        return defectReportRepository.findAll();
+    }
 
     private String generateReportNumber(String employeeNumber) {
         String timestamp = String.valueOf(System.currentTimeMillis()).substring(8);

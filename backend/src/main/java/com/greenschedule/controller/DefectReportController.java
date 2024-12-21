@@ -4,6 +4,7 @@ import com.greenschedule.dto.DefectReportRequest;
 import com.greenschedule.dto.DefectReportResponse;
 import com.greenschedule.model.entity.DefectReport;
 import com.greenschedule.model.entity.DefectStatus;
+import com.greenschedule.repository.DefectReportRepository;
 import com.greenschedule.service.DefectReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 public class DefectReportController {
     private final DefectReportService defectReportService;
 
+    
     @PostMapping
     @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<DefectReportResponse> createReport(
@@ -70,4 +73,14 @@ public class DefectReportController {
         
         return response;
     }
+    
+    @GetMapping
+    public ResponseEntity<List<DefectReportResponse>> getAllReports() {
+        List<DefectReport> reports = defectReportService.getAllReports();  // You'll need to create this method
+        List<DefectReportResponse> responseList = reports.stream()
+            .map(this::convertToResponse)
+            .collect(Collectors.toList());
+        return ResponseEntity.ok(responseList);
+    }
+    
 }

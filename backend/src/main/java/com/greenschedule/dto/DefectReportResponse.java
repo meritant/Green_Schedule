@@ -3,7 +3,9 @@ package com.greenschedule.dto;
 import lombok.Data;
 import java.util.UUID;
 
+
 @Data
+
 public class DefectReportResponse {
     private UUID id;
     private String reportNumber;
