@@ -70,6 +70,7 @@ public class DefectReportService {
         User user = userService.getUserByUsername(username);
         return defectReportRepository.findByReportedBy(user);
     }
+    
 
     @Transactional
     public DefectReport updateReportStatus(UUID reportId, DefectStatus newStatus, String username) {
@@ -90,4 +91,6 @@ public class DefectReportService {
 
         return defectReportRepository.save(report);
     }
+    
+    
 }

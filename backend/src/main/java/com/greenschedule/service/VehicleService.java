@@ -102,4 +102,12 @@ public class VehicleService {
     public List<Vehicle> getVehiclesByStatus(VehicleStatus status) {
         return vehicleRepository.findByStatus(status);
     }
+    
+    public long countAll() {
+        return vehicleRepository.count();
+    }
+
+    public long countByStatus(VehicleStatus status) {
+        return vehicleRepository.countByStatus(status);
+    }
 }

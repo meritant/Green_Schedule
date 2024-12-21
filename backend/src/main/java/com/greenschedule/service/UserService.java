@@ -1,6 +1,7 @@
 package com.greenschedule.service;
 
 import com.greenschedule.model.entity.User;
+import com.greenschedule.model.entity.UserRole;
 import com.greenschedule.repository.UserRepository;
 import com.greenschedule.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +39,7 @@ public class UserService implements UserDetailsService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
-
+    
     @Transactional
     public void deleteUser(UUID id) {
         User user = getUserById(id);
@@ -55,5 +56,9 @@ public class UserService implements UserDetailsService {
 
     public boolean existsByEmployeeNumber(String employeeNumber) {
         return userRepository.existsByEmployeeNumber(employeeNumber);
+    }
+    
+    public long countDrivers() {
+        return userRepository.countByRole(UserRole.DRIVER);
     }
 }

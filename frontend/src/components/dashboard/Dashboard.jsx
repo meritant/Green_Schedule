@@ -7,7 +7,7 @@ function Dashboard() {
   const [stats, setStats] = useState({
     totalVehicles: 0,
     defectiveVehicles: 0,
-    pendingReports: 0
+    totalReports: 0  // Changed from pendingReports
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -62,10 +62,10 @@ function Dashboard() {
         <div className="bg-white overflow-hidden shadow rounded-lg">
           <div className="px-4 py-5 sm:p-6">
             <dt className="text-sm font-medium text-gray-500 truncate">
-              Pending Reports
+              Total Reports
             </dt>
-            <dd className="mt-1 text-3xl font-semibold text-yellow-600">
-              {stats.pendingReports}
+            <dd className="mt-1 text-3xl font-semibold text-blue-600">
+              {stats.totalReports}
             </dd>
           </div>
         </div>
