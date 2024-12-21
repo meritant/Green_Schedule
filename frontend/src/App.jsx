@@ -10,6 +10,8 @@ import VehicleList from './components/vehicles/VehicleList';
 import VehicleForm from './components/vehicles/VehicleForm';
 import EmployeeList from './components/employees/EmployeeList';
 import DefectReportList from './components/reports/DefectReportList';
+import DefectReportForm from './components/reports/DefectReportForm';
+
 
 
 function App() {
@@ -40,6 +42,9 @@ function App() {
                   <Route path="/vehicles/new" element={<VehicleForm />} />
                   <Route path="employees" element={<EmployeeList />} />
                   <Route path="/reports" element={<DefectReportList />} />
+                  <Route path="/reports/new" element={<DefectReportForm />} />
+
+                  
 
                 </Route>
               </Routes>

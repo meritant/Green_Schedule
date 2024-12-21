@@ -16,4 +16,6 @@ public class VehicleResponse {
     private VehicleType type;
     private VehicleStatus status;
     private String scheduleTypeName;
+    private UUID scheduleTypeId;
+
 }

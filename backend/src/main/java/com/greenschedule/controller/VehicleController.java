@@ -70,19 +70,21 @@ public class VehicleController {
     }
 
     private VehicleResponse convertToResponse(Vehicle vehicle) {
-        VehicleResponse response = new VehicleResponse();
-        response.setId(vehicle.getId());
-        response.setVehicleNumber(vehicle.getVehicleNumber());
-        response.setLicensePlate(vehicle.getLicensePlate());
-        response.setMake(vehicle.getMake());
-        response.setModel(vehicle.getModel());
-        response.setYear(vehicle.getYear());
-        response.setType(vehicle.getType());
-        response.setStatus(vehicle.getStatus());
-        response.setScheduleTypeName(vehicle.getScheduleType() != null ? 
-            vehicle.getScheduleType().getName() : null);
-        return response;
-    }
+    	   VehicleResponse response = new VehicleResponse();
+    	   response.setId(vehicle.getId());
+    	   response.setVehicleNumber(vehicle.getVehicleNumber());
+    	   response.setLicensePlate(vehicle.getLicensePlate());
+    	   response.setMake(vehicle.getMake());
+    	   response.setModel(vehicle.getModel());
+    	   response.setYear(vehicle.getYear());
+    	   response.setType(vehicle.getType());
+    	   response.setStatus(vehicle.getStatus());
+    	   if (vehicle.getScheduleType() != null) {
+    	       response.setScheduleTypeName(vehicle.getScheduleType().getName());
+    	       response.setScheduleTypeId(vehicle.getScheduleType().getId());
+    	   }
+    	   return response;
+    	}
 
     private Vehicle convertToEntity(VehicleRequest request) {
         return Vehicle.builder()
