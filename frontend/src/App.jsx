@@ -1,4 +1,3 @@
-// src/App.jsx
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Layout from './components/common/Layout';
 import Login from './components/auth/Login';
@@ -7,31 +6,41 @@ import Dashboard from './components/dashboard/Dashboard';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
-
+import VehicleList from './components/vehicles/VehicleList';
+import VehicleForm from './components/vehicles/VehicleForm';
+import EmployeeList from './components/employees/EmployeeList';
 
 function App() {
   return (
     <AuthProvider>
       <NotificationProvider>
         <Router>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          
-          {/* Protected routes */}
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <Layout />
-              </ProtectedRoute>
-            }
-          >
-            <Route index element={<Dashboard />} />
-            {/* Add more routes here */}
-          </Route>
-        </Routes>
+          <div className="min-h-screen bg-gray-100">
+            <div className="w-full">
+              <Routes>
+                {/* Public routes */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                
+
+                
+                {/* Protected routes */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<Dashboard />} />
+                  <Route path="/vehicles" element={<VehicleList />} />
+                  <Route path="/vehicles/new" element={<VehicleForm />} />
+                  <Route path="employees" element={<EmployeeList />} />
+                </Route>
+              </Routes>
+            </div>
+          </div>
         </Router>
       </NotificationProvider>
     </AuthProvider>
