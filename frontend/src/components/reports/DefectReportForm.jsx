@@ -117,87 +117,20 @@ const fetchScheduleDetails = async (vehicle) => {
        ));
    };
 
-   const [previewVisible, setPreviewVisible] = useState(false);
+// REMOVE    const [previewVisible, setPreviewVisible] = useState(false);
    const [showPreview, setShowPreview] = useState(false);
 
-   const handlePreview = () => {
-    setShowPreview(true);
-    console.log('Validating form:', {
-        mileage,
-        defects: defects.map(d => ({
-            partId: d.partId,
-            defectOptionId: d.defectOptionId
-        }))
-    }); // Add logging
 
+
+   const handlePreview = () => {
     const isValid = mileage && defects.every(d => d.partId && d.defectOptionId);
     
     if (!isValid) {
         showNotification('error', 'Please fill in all required fields');
         return;
     }
-    setPreviewVisible(true);
+    setCurrentStep(3);
 };
-
-
-
-
-// const PreviewStep = () => {
-//     return (
-//         <div className="space-y-6 bg-white p-6 rounded-lg shadow">
-//             <h2 className="text-xl font-bold">Report Preview</h2>
-
-//             <div className="space-y-4">
-//                 <div>
-//                     <h3 className="font-medium">Vehicle Information</h3>
-//                     <p>{selectedVehicle.vehicleNumber} - {selectedVehicle.make} {selectedVehicle.model}</p>
-//                     <p>License Plate: {selectedVehicle.licensePlate}</p>
-//                     <p>Current Mileage: {mileage}</p>
-//                 </div>
-
-//                 <div>
-//                     <h3 className="font-medium">Reported Defects</h3>
-//                     {defects.map((defect, index) => {
-//                         const selectedPart = scheduleDetails.parts.find(p => p.id === defect.partId);
-//                         const selectedDefect = selectedPart?.defectOptions.find(d => d.id === defect.defectOptionId);
-                        
-//                         return (
-//                             <div key={defect.id} className="mt-4 p-4 bg-gray-50 rounded">
-//                                 <p className="font-medium">Defect #{index + 1}</p>
-//                                 <div className="ml-4">
-//                                     <p>Part: {selectedPart?.name}</p>
-//                                     <p>Defect: {selectedDefect?.description}</p>
-//                                     <p>Severity: <span className={selectedDefect?.isMajorDefect ? 'text-red-600' : 'text-yellow-600'}>
-//                                         {selectedDefect?.isMajorDefect ? 'Major' : 'Minor'}
-//                                     </span></p>
-//                                     {(defect.isPartiallyWorking || defect.isNotWorking) && (
-//                                         <p>Working Status: {defect.isNotWorking ? 'Not Working' : 'Partially Working'}</p>
-//                                     )}
-//                                     {defect.comments && <p>Comments: {defect.comments}</p>}
-//                                 </div>
-//                             </div>
-//                         );
-//                     })}
-//                 </div>
-//             </div>
-
-//             <div className="flex justify-end space-x-4 mt-6">
-//                 <button
-//                     onClick={() => setCurrentStep(2)}
-//                     className="px-4 py-2 border border-gray-300 rounded text-gray-700"
-//                 >
-//                     Edit Report
-//                 </button>
-//                 <button
-//                     onClick={handleSubmit}
-//                     className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
-//                 >
-//                     Submit Report
-//                 </button>
-//             </div>
-//         </div>
-//     );
-// };
 
 
    const VehicleSelectionStep = () => (
@@ -399,7 +332,7 @@ const fetchScheduleDetails = async (vehicle) => {
             <div className="space-x-3">
                 <button
                     type="button"
-                    onClick={() => setCurrentStep(3)}
+                    onClick={() => setCurrentStep(1)}
                     className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                 >
                     Back
@@ -418,6 +351,75 @@ const fetchScheduleDetails = async (vehicle) => {
 
 // Defect selection step END
 
+const handleSubmit = async () => {
+    // Will implement submission logic later
+    console.log('Submitting report:', {
+        vehicle: selectedVehicle,
+        mileage,
+        defects
+    });
+};
+
+const PreviewReport = () => {
+    return (
+        <div className="space-y-6 bg-white p-6 rounded-lg shadow">
+            <h2 className="text-xl font-bold">Report Preview</h2>
+
+            <div className="space-y-4">
+                <div>
+                    <h3 className="font-medium">Vehicle Information</h3>
+                    <p>{selectedVehicle.vehicleNumber} - {selectedVehicle.make} {selectedVehicle.model}</p>
+                    <p>License Plate: {selectedVehicle.licensePlate}</p>
+                    <p>Current Mileage: {mileage}</p>
+                </div>
+
+                <div>
+                    <h3 className="font-medium">Reported Defects</h3>
+                    {defects.map((defect, index) => {
+                        const selectedPart = scheduleDetails.parts.find(p => p.id === defect.partId);
+                        const selectedDefect = selectedPart?.defectOptions.find(d => d.id === defect.defectOptionId);
+                        
+                        return (
+                            <div key={defect.id} className="mt-4 p-4 bg-gray-50 rounded">
+                                <p className="font-medium">Defect #{index + 1}</p>
+                                <div className="ml-4">
+                                    <p>Part: {selectedPart?.name}</p>
+                                    <p>Defect: {selectedDefect?.description}</p>
+                                    <p>Severity: <span className={selectedDefect?.isMajorDefect ? 'text-red-600' : 'text-yellow-600'}>
+                                        {selectedDefect?.isMajorDefect ? 'Major' : 'Minor'}
+                                    </span></p>
+                                    {(defect.isPartiallyWorking || defect.isNotWorking) && (
+                                        <p>Working Status: {defect.isNotWorking ? 'Not Working' : 'Partially Working'}</p>
+                                    )}
+                                    {defect.comments && <p>Comments: {defect.comments}</p>}
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+
+            <div className="flex justify-end space-x-4 mt-6">
+                <button
+                    onClick={() => setShowPreview(false)}
+                    className="px-4 py-2 border border-gray-300 rounded text-gray-700"
+                >
+                    Edit Report
+                </button>
+                <button
+                    onClick={handleSubmit}
+                    className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                >
+                    Submit Report
+                </button>
+            </div>
+        </div>
+    );
+};
+
+
+
+
    if (loading) return <div>Loading...</div>;
 
    return (
@@ -430,8 +432,10 @@ const fetchScheduleDetails = async (vehicle) => {
                    
                    <div className="mt-6">
                    {currentStep === 1 ? VehicleSelectionStep() : 
- currentStep === 2 ? DefectSelectionStep() :
- PreviewStep()}                   </div>
+                    currentStep === 2 ? DefectSelectionStep() : 
+                    PreviewReport()}
+                   
+                                      </div>
                </div>
            </div>
        </div>
