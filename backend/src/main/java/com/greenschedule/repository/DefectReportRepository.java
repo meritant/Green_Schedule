@@ -18,5 +18,5 @@ public interface DefectReportRepository extends JpaRepository<DefectReport, UUID
     boolean existsByReportNumber(String reportNumber);
     long countByStatus(DefectStatus status);
     List<DefectReport> findAllByOrderByReportedAtDesc();
-//    Page<DefectReport> findAll(Pageable pageable);
+    boolean existsByVehicleAndIdNot(Vehicle vehicle, UUID reportId);
 }

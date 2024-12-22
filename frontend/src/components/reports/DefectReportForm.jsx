@@ -458,7 +458,7 @@ const PreviewReport = () => {
                     currentStep === 2 ? DefectSelectionStep() : 
                     PreviewReport()}
                    
-                                      </div>
+                    </div>
                </div>
            </div>
        </div>

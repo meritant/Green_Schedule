@@ -72,6 +72,24 @@ public class DefectReportService {
         return report;
     }
     
+    @Transactional
+    public void deleteReport(UUID reportId) {
+        DefectReport report = defectReportRepository.findById(reportId)
+                .orElseThrow(() -> new ResourceNotFoundException("Report not found"));
+        
+        // If vehicle status was affected by this report, check other reports
+        if (report.getVehicle().getStatus() != VehicleStatus.NORMAL) {
+            boolean hasOtherActiveReports = defectReportRepository
+                    .existsByVehicleAndIdNot(report.getVehicle(), reportId);
+            
+            if (!hasOtherActiveReports) {
+                vehicleService.updateVehicleStatus(report.getVehicle().getId(), VehicleStatus.NORMAL);
+            }
+        }
+        
+        defectReportRepository.delete(report);
+    }
+    
     public List<DefectReport> getAllReports() {
         return defectReportRepository.findAll();
     }

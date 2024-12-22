@@ -33,6 +33,13 @@ public class DefectReportController {
        DefectReport report = defectReportService.createReport(request, authentication.getName());
        return ResponseEntity.ok(convertToResponse(report));
    }
+   
+   @DeleteMapping("/{reportId}")
+   @PreAuthorize("hasRole('SUPERVISOR')")
+   public ResponseEntity<Void> deleteReport(@PathVariable UUID reportId) {
+      defectReportService.deleteReport(reportId);
+      return ResponseEntity.noContent().build();
+   }
 
    @GetMapping("/vehicle/{vehicleId}")
    public ResponseEntity<List<DefectReportResponse>> getVehicleReports(@PathVariable UUID vehicleId) {
