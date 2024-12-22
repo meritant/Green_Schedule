@@ -352,12 +352,35 @@ const fetchScheduleDetails = async (vehicle) => {
 // Defect selection step END
 
 const handleSubmit = async () => {
-    // Will implement submission logic later
-    console.log('Submitting report:', {
-        vehicle: selectedVehicle,
-        mileage,
-        defects
-    });
+    try {
+        const reportData = {
+            vehicleId: selectedVehicle.id,
+            mileage: parseInt(mileage),
+            items: defects.map(defect => ({
+                defectOptionId: defect.defectOptionId,
+                isPartiallyWorking: defect.isPartiallyWorking,
+                isNotWorking: defect.isNotWorking,
+                comments: defect.comments
+            }))
+        };
+
+        const response = await fetch('/api/v1/defect-reports', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reportData)
+        });
+
+        if (!response.ok) throw new Error('Failed to submit report');
+        
+        showNotification('success', 'Report submitted successfully');
+        navigate('/reports');
+    } catch (error) {
+        showNotification('error', 'Failed to submit report');
+        console.error('Submit error:', error);
+    }
 };
 
 const PreviewReport = () => {

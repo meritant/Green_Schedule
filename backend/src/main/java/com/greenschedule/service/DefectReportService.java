@@ -1,5 +1,6 @@
 package com.greenschedule.service;
 
+import com.greenschedule.dto.DefectReportItemRequest;
 import com.greenschedule.dto.DefectReportRequest;
 import com.greenschedule.exception.ResourceNotFoundException;
 import com.greenschedule.model.entity.*;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,33 +23,47 @@ public class DefectReportService {
 
     @Transactional
     public DefectReport createReport(DefectReportRequest request, String username) {
-        // Get related entities
         Vehicle vehicle = vehicleService.getVehicleById(request.getVehicleId());
         User reporter = userService.getUserByUsername(username);
-        DefectOption defectOption = defectOptionService.getDefectOptionById(request.getDefectOptionId());
-
-        // Generate report number
         String reportNumber = generateReportNumber(reporter.getEmployeeNumber());
 
-        // Create report
+        // Create main report
         DefectReport report = DefectReport.builder()
                 .reportNumber(reportNumber)
                 .vehicle(vehicle)
                 .reportedBy(reporter)
                 .reportedAt(LocalDateTime.now())
-                .defectOption(defectOption)
-                .isPartiallyWorking(request.isPartiallyWorking())
-                .isNotWorking(request.isNotWorking())
-                .comments(request.getComments())
                 .mileage(request.getMileage())
                 .status(DefectStatus.REPORTED)
                 .build();
 
-        // Save report
-        report = defectReportRepository.save(report);
+        // Process items and check for major defects
+        boolean hasMajorDefect = false;
+        report.setItems(new ArrayList<>());
+        
+        for (DefectReportItemRequest itemRequest : request.getItems()) {
+            DefectOption defectOption = defectOptionService.getDefectOptionById(itemRequest.getDefectOptionId());
+            
+            DefectReportItem item = DefectReportItem.builder()
+                    .defectReport(report)
+                    .defectOption(defectOption)
+                    .isPartiallyWorking(itemRequest.isPartiallyWorking())
+                    .isNotWorking(itemRequest.isNotWorking())
+                    .comments(itemRequest.getComments())
+                    .build();
+            
+            report.getItems().add(item);
+            
+            if (defectOption.isMajorDefect()) {
+                hasMajorDefect = true;
+            }
+        }
 
-        // Update vehicle status if major defect
-        if (defectOption.isMajorDefect()) {
+        // Save report and update vehicle status
+        report = defectReportRepository.save(report);
+        
+        // Update vehicle status based on defect severity
+        if (hasMajorDefect) {
             vehicleService.updateVehicleStatus(vehicle.getId(), VehicleStatus.DEFECTIVE);
         } else {
             vehicleService.updateVehicleStatus(vehicle.getId(), VehicleStatus.WARNING);

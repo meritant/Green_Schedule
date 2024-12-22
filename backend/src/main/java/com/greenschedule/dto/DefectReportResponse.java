@@ -1,6 +1,8 @@
 package com.greenschedule.dto;
 
 import lombok.Data;
+
+import java.util.List;
 import java.util.UUID;
 
 
@@ -20,4 +22,6 @@ public class DefectReportResponse {
     private String reportedBy;
     private String reportedAt;
     private String status;
+    private List<DefectReportItemResponse> items;
+
 }

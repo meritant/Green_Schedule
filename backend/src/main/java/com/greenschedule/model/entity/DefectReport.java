@@ -6,46 +6,44 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
+@Entity
+@Table(name = "defect_reports")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "defect_reports")
 public class DefectReport {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
-
-    @Column(nullable = false)
-    private String reportNumber;  // e.g., "R123454"
+    private String reportNumber;
+    private Long mileage;
+    private LocalDateTime reportedAt;
+    @Enumerated(EnumType.STRING)
+    private DefectStatus status;
 
     @ManyToOne
-    @JoinColumn(name = "vehicle_id", nullable = false)
+    @JoinColumn(name = "vehicle_id")
     private Vehicle vehicle;
 
     @ManyToOne
-    @JoinColumn(name = "reported_by", nullable = false)
+    @JoinColumn(name = "reported_by")
     private User reportedBy;
 
-    @Column(nullable = false)
-    private LocalDateTime reportedAt;
+    @OneToMany(mappedBy = "defectReport", cascade = CascadeType.ALL)
+    private List<DefectReportItem> items;
+    
+//  @ManyToOne
+//  @JoinColumn(name = "defect_option_id", nullable = false)
+//  private DefectOption defectOption;
 
-    private Long mileage;
+//  private boolean isPartiallyWorking;
+//  private boolean isNotWorking;
 
-    @ManyToOne
-    @JoinColumn(name = "defect_option_id", nullable = false)
-    private DefectOption defectOption;
-
-    private boolean isPartiallyWorking;
-    private boolean isNotWorking;
-
-    @Column(length = 1000)
-    private String comments;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private DefectStatus status;
+//  @Column(length = 1000)
+    
 }
