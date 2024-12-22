@@ -401,7 +401,7 @@ const PreviewReport = () => {
 
             <div className="flex justify-end space-x-4 mt-6">
                 <button
-                    onClick={() => setShowPreview(false)}
+                    onClick={() => setCurrentStep(2)}
                     className="px-4 py-2 border border-gray-300 rounded text-gray-700"
                 >
                     Edit Report
