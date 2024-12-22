@@ -358,8 +358,8 @@ const handleSubmit = async () => {
             mileage: parseInt(mileage),
             items: defects.map(defect => ({
                 defectOptionId: defect.defectOptionId,
-                isPartiallyWorking: defect.isPartiallyWorking,
-                isNotWorking: defect.isNotWorking,
+                isPartiallyWorking: defect.isPartiallyWorking ? true : false,
+                isNotWorking: defect.isNotWorking ? true : false,
                 comments: defect.comments
             }))
         };
@@ -374,14 +374,15 @@ const handleSubmit = async () => {
         });
 
         if (!response.ok) throw new Error('Failed to submit report');
-        
         showNotification('success', 'Report submitted successfully');
         navigate('/reports');
     } catch (error) {
         showNotification('error', 'Failed to submit report');
-        console.error('Submit error:', error);
     }
 };
+
+
+
 
 const PreviewReport = () => {
     return (
