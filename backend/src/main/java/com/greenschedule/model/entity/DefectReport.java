@@ -37,13 +37,6 @@ public class DefectReport {
     @OneToMany(mappedBy = "defectReport", cascade = CascadeType.ALL)
     private List<DefectReportItem> items;
     
-//  @ManyToOne
-//  @JoinColumn(name = "defect_option_id", nullable = false)
-//  private DefectOption defectOption;
 
-//  private boolean isPartiallyWorking;
-//  private boolean isNotWorking;
-
-//  @Column(length = 1000)
     
 }
