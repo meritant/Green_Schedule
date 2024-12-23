@@ -104,7 +104,7 @@ const handleDelete = async (reportId) => {
 
 // Modal component
 const ReportModal = ({ report, onClose }) => {
-  // f ANY item is a major defect, it is Major
+  // If ANY item is a major defect, it is Major
   const hasMajorDefect = report.items.some(item => item.majorDefect);
   
   // PDF feature
@@ -187,7 +187,10 @@ const ReportModal = ({ report, onClose }) => {
                     {item.majorDefect ? 'Major' : 'Minor'}
                   </span>
                 </p>
-                <p>
+
+{/* Status disabled, doesn't work properly */}
+
+                {/* <p>
                   <strong className="mr-2">Status:</strong> 
                   <span className={
                     item.isNotWorking 
@@ -202,7 +205,8 @@ const ReportModal = ({ report, onClose }) => {
                         ? 'Partially Working' 
                         : 'Working'}
                   </span>
-                </p>
+                </p> */}
+
                 {item.comments && (
                   <p className="mt-2">
                     <strong className="mr-2">Comments:</strong> 
@@ -384,7 +388,10 @@ const ReportModal = ({ report, onClose }) => {
             <option value="FIXED">Fixed</option>
             <option value="VERIFIED">Verified</option>
         </select>
-        <button
+
+{/* View button dissabled */}
+
+        {/* <button
             onClick={() => {
               setSelectedReport(report);
               setShowModal(true);
@@ -393,7 +400,9 @@ const ReportModal = ({ report, onClose }) => {
             className="text-indigo-600 hover:text-indigo-900 mx-2"
         >
             View
-        </button>
+        </button> */}
+
+        
         <button
             onClick={() => handleDelete(report.id)}
             className="text-red-600 hover:text-red-900"
@@ -466,16 +475,7 @@ const ReportModal = ({ report, onClose }) => {
                               >
                                 {report.vehicleNumber}
                               </td>
-                              {/* Rest of the table cells */}
-                              <td 
-                          className="whitespace-nowrap px-3 py-4 text-sm text-blue-600 underline cursor-pointer hover:text-blue-800"
-                          onClick={() => {
-                            setSelectedReport(report);
-                            setShowModal(true);
-                          }}
-                        >
-                          {report.vehicleNumber}
-                        </td>
+                              
                         <td className="whitespace-nowrap px-3 py-4 text-sm">
                           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             report.majorDefect 
@@ -520,7 +520,10 @@ const ReportModal = ({ report, onClose }) => {
             <option value="FIXED">Fixed</option>
             <option value="VERIFIED">Verified</option>
         </select>
-        <button
+        
+        {/* Action Buttons */}
+
+        {/* <button
             onClick={() => {
               setSelectedReport(report);
               setShowModal(true);
@@ -535,7 +538,10 @@ const ReportModal = ({ report, onClose }) => {
             className="text-red-600 hover:text-red-900"
         >
             Delete
-        </button>
+        </button> */}
+
+        {/* Action Buttons END */}
+        
     </td>
 )}
 
