@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 
 function DefectReportList() {
@@ -269,7 +270,8 @@ const ReportModal = ({ report, onClose }) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full min-h-screen">
-        <div className="text-gray-600">Loading...</div>
+        {/* <div className="text-gray-600">Loading...</div> */}
+        <LoadingSpinner />
       </div>
     );
   }

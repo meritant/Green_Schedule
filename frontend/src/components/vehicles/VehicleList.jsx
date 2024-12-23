@@ -3,6 +3,8 @@ import axiosInstance from '../../utils/axiosConfig';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useNotification } from '../../context/NotificationContext';
+import LoadingSpinner from '../common/LoadingSpinner';
+
 
 function VehicleList() {
   const [vehicles, setVehicles] = useState([]);
@@ -140,7 +142,8 @@ function VehicleList() {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner />
+    ;
   }
 
   return (

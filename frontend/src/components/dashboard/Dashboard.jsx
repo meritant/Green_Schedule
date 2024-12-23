@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../utils/axiosConfig';
+import LoadingSpinner from '../common/LoadingSpinner';
+
 
 function Dashboard() {
   const { user } = useAuth();
@@ -30,7 +32,7 @@ function Dashboard() {
     }
   }, [user.role]);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <LoadingSpinner />;
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
