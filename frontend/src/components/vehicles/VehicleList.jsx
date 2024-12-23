@@ -84,8 +84,7 @@ function VehicleList() {
     );
   };
   
-  // Update the vehicle card click handler
-  // Replace the Link component with a div
+  
   {vehicles.map((vehicle) => (
     <div
       key={vehicle.id}
