@@ -108,7 +108,7 @@ const fetchScheduleDetails = async (vehicle) => {
    };
 
    const updateDefect = (defectId, field, value) => {
-    console.log('Updating defect:', defectId, field, value); // Add this log
+    console.log('Updating defect:', defectId, field, value); //  log
 
        setDefects(defects.map(defect => 
            defect.id === defectId 
@@ -117,7 +117,10 @@ const fetchScheduleDetails = async (vehicle) => {
        ));
    };
 
-// REMOVE    const [previewVisible, setPreviewVisible] = useState(false);
+
+
+
+
    const [showPreview, setShowPreview] = useState(false);
 
 
@@ -386,36 +389,63 @@ const handleSubmit = async () => {
 
 const PreviewReport = () => {
     return (
-        <div className="space-y-6 bg-white p-6 rounded-lg shadow">
-            <h2 className="text-xl font-bold">Report Preview</h2>
+        <div className="space-y-6 bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold text-gray-900">Report Preview</h2>
 
             <div className="space-y-4">
-                <div>
-                    <h3 className="font-medium">Vehicle Information</h3>
-                    <p>{selectedVehicle.vehicleNumber} - {selectedVehicle.make} {selectedVehicle.model}</p>
-                    <p>License Plate: {selectedVehicle.licensePlate}</p>
-                    <p>Current Mileage: {mileage}</p>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">Vehicle Information</h3>
+                    <div className="space-y-1">
+                        <p><strong className="mr-2 text-gray-600">Vehicle:</strong> {selectedVehicle.vehicleNumber} - {selectedVehicle.make} {selectedVehicle.model}</p>
+                        <p><strong className="mr-2 text-gray-600">License Plate:</strong> {selectedVehicle.licensePlate}</p>
+                        <p><strong className="mr-2 text-gray-600">Current Mileage:</strong> {mileage}</p>
+                    </div>
                 </div>
 
                 <div>
-                    <h3 className="font-medium">Reported Defects</h3>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">Reported Defects</h3>
                     {defects.map((defect, index) => {
                         const selectedPart = scheduleDetails.parts.find(p => p.id === defect.partId);
                         const selectedDefect = selectedPart?.defectOptions.find(d => d.id === defect.defectOptionId);
                         
                         return (
-                            <div key={defect.id} className="mt-4 p-4 bg-gray-50 rounded">
-                                <p className="font-medium">Defect #{index + 1}</p>
-                                <div className="ml-4">
-                                    <p>Part: {selectedPart?.name}</p>
-                                    <p>Defect: {selectedDefect?.description}</p>
-                                    <p>Severity: <span className={selectedDefect?.isMajorDefect ? 'text-red-600' : 'text-yellow-600'}>
-                                        {selectedDefect?.isMajorDefect ? 'Major' : 'Minor'}
-                                    </span></p>
+                            <div 
+                                key={defect.id} 
+                                className={`mt-4 p-4 rounded-lg border-l-4 ${
+                                    selectedDefect?.isMajorDefect 
+                                        ? 'bg-red-50 border-red-500' 
+                                        : 'bg-yellow-50 border-yellow-500'
+                                }`}
+                            >
+                                <div className="flex justify-between items-center mb-2">
+                                    <p className="font-bold text-gray-700">Defect #{index + 1}</p>
+                                    <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                                        selectedDefect?.isMajorDefect 
+                                            ? 'bg-red-200 text-red-800' 
+                                            : 'bg-yellow-200 text-yellow-800'
+                                    }`}>
+                                        {selectedDefect?.isMajorDefect ? 'Major Severity' : 'Minor Severity'}
+                                    </span>
+                                </div>
+                                <div className="ml-4 space-y-1">
+                                    <p><strong className="mr-2 text-gray-600">Part:</strong> {selectedPart?.name}</p>
+                                    <p><strong className="mr-2 text-gray-600">Defect:</strong> {selectedDefect?.description}</p>
+                                    
                                     {(defect.isPartiallyWorking || defect.isNotWorking) && (
-                                        <p>Working Status: {defect.isNotWorking ? 'Not Working' : 'Partially Working'}</p>
+                                        <p>
+                                            <strong className="mr-2 text-gray-600">Working Status:</strong> 
+                                            <span className={
+                                                defect.isNotWorking 
+                                                    ? 'text-red-600 font-bold' 
+                                                    : 'text-yellow-600 font-bold'
+                                            }>
+                                                {defect.isNotWorking ? 'Not Working' : 'Partially Working'}
+                                            </span>
+                                        </p>
                                     )}
-                                    {defect.comments && <p>Comments: {defect.comments}</p>}
+                                    {defect.comments && (
+                                        <p><strong className="mr-2 text-gray-600">Comments:</strong> {defect.comments}</p>
+                                    )}
                                 </div>
                             </div>
                         );
@@ -426,7 +456,7 @@ const PreviewReport = () => {
             <div className="flex justify-end space-x-4 mt-6">
                 <button
                     onClick={() => setCurrentStep(2)}
-                    className="px-4 py-2 border border-gray-300 rounded text-gray-700"
+                    className="px-4 py-2 border border-gray-300 rounded text-gray-700 hover:bg-gray-50"
                 >
                     Edit Report
                 </button>
@@ -451,7 +481,7 @@ const PreviewReport = () => {
            <div className="bg-white shadow sm:rounded-lg">
                <div className="px-4 py-5 sm:p-6">
                    <h3 className="text-lg font-medium leading-6 text-gray-900">
-                       Report Vehicle Defect - Step {currentStep} of 2
+                       Report Vehicle Defect - Step {currentStep} of 3
                    </h3>
                    
                    <div className="mt-6">

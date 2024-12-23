@@ -7,23 +7,31 @@ import com.greenschedule.model.entity.DefectReport;
 import com.greenschedule.model.entity.DefectStatus;
 import com.greenschedule.repository.DefectReportRepository;
 import com.greenschedule.service.DefectReportService;
+import com.greenschedule.service.PdfService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+//import java.net.http.HttpHeaders;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 @RestController
 @RequestMapping("/api/v1/defect-reports")
 @RequiredArgsConstructor
 public class DefectReportController {
    private final DefectReportService defectReportService;
+   private final PdfService pdfService;
+
 
    @PostMapping
    @PreAuthorize("hasRole('DRIVER')")
@@ -97,5 +105,16 @@ public class DefectReportController {
                .map(this::convertToResponse)
                .collect(Collectors.toList());
        return ResponseEntity.ok(responseList);
+   }
+   
+   @GetMapping("/{reportId}/pdf")
+   public ResponseEntity<byte[]> downloadReportPdf(@PathVariable UUID reportId) {
+       DefectReport report = defectReportService.getReportById(reportId);
+       byte[] pdfBytes = pdfService.generateReportPdf(report);
+       
+       return ResponseEntity.ok()
+               .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_PDF_VALUE)
+               .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"report-" + report.getReportNumber() + ".pdf\"")
+               .body(pdfBytes);
    }
 }

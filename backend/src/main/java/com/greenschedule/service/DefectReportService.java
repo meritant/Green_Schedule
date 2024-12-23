@@ -130,5 +130,8 @@ public class DefectReportService {
         return defectReportRepository.save(report);
     }
     
-    
+    public DefectReport getReportById(UUID reportId) {
+        return defectReportRepository.findById(reportId)
+                .orElseThrow(() -> new ResourceNotFoundException("Report not found with id: " + reportId));
+    }
 }

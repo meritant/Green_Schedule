@@ -41,15 +41,6 @@ const [showModal, setShowModal] = useState(false);
 };
 
 
-
-
-
-
-
-
-
-
-
   const fetchReports = async () => {
     try {
       const token = localStorage.getItem('token');
@@ -94,6 +85,35 @@ const handleDelete = async (reportId) => {
 const ReportModal = ({ report, onClose }) => {
   // f ANY item is a major defect, it is Major
   const hasMajorDefect = report.items.some(item => item.majorDefect);
+  
+  // PDF feature
+  
+  const handleDownload = async () => {
+    try {
+        const response = await fetch(`/api/v1/defect-reports/${report.id}/pdf`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to download PDF');
+        
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `report-${report.reportNumber}.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        a.remove();
+    } catch (error) {
+        showNotification('error', 'Failed to download PDF');
+    }
+};
+  
+  // PDF feature END
+  
   return (
   
   <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4">
@@ -192,6 +212,20 @@ const ReportModal = ({ report, onClose }) => {
             </div>
           </div>
         </div>
+        <div className="mt-4 flex justify-end space-x-3">
+                        <button
+                            onClick={handleDownload}
+                            className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700"
+                        >
+                            Download PDF
+                        </button>
+                        <button
+                            onClick={onClose}
+                            className="px-4 py-2 border border-gray-300 rounded text-gray-700"
+                        >
+                            Close
+                        </button>
+                    </div>
       </div>
     </div>
   </div>
