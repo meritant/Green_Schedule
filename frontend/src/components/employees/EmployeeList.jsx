@@ -4,32 +4,35 @@ import { useAuth } from '../../context/AuthContext';
 
 function EmployeeList() {
  const [employees, setEmployees] = useState([]);
+ const { user } = useAuth();
 
  useEffect(() => {
-   const fetchEmployees = async () => {
-     const response = await fetch('/api/v1/users', {
-       headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
-     });
-     const data = await response.json();
-     setEmployees(data);
-   };
-   fetchEmployees();
- }, []);
+  const fetchEmployees = async () => {
+    const response = await fetch('/api/v1/users', {
+      headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+    });
+    const data = await response.json();
+    setEmployees(data);
+  };
+  fetchEmployees();
+}, []);
 
- return (
-   <div className="px-4 sm:px-6 lg:px-8">
-     <div className="sm:flex sm:items-center">
-       <div className="sm:flex-auto">
-         <h1 className="text-xl font-semibold">Employees</h1>
-       </div>
-       <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-         <Link to="/employees/new" 
-           className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
-           Add Employee
-         </Link>
-       </div>
-     </div>
-     
+return (
+  <div className="px-4 sm:px-6 lg:px-8">
+    <div className="sm:flex sm:items-center">
+      <div className="sm:flex-auto">
+        <h1 className="text-xl font-semibold">Employees</h1>
+      </div>
+      {user.role === 'SUPERVISOR' && (
+        <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+          <Link to="/employees/new" 
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700">
+            Add Employee
+          </Link>
+        </div>
+      )}
+    </div>
+
      <div className="mt-8 flex flex-col">
        <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
          <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">

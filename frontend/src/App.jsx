@@ -11,7 +11,7 @@ import VehicleForm from './components/vehicles/VehicleForm';
 import EmployeeList from './components/employees/EmployeeList';
 import DefectReportList from './components/reports/DefectReportList';
 import DefectReportForm from './components/reports/DefectReportForm';
-
+import EmployeeForm from './components/employees/EmployeeForm';
 
 
 function App() {
@@ -25,9 +25,7 @@ function App() {
                 {/* Public routes */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                
-
-                
+                                
                 {/* Protected routes */}
                 <Route
                   path="/"
@@ -37,16 +35,16 @@ function App() {
                     </ProtectedRoute>
                   }
                 >
+                  
                   <Route index element={<Dashboard />} />
                   <Route path="/vehicles" element={<VehicleList />} />
                   <Route path="/vehicles/new" element={<VehicleForm />} />
                   <Route path="employees" element={<EmployeeList />} />
                   <Route path="/reports" element={<DefectReportList />} />
                   <Route path="/reports/new" element={<DefectReportForm />} />
-
-                  
-
+                  <Route path="/employees/new" element={<EmployeeForm />} />                
                 </Route>
+                
               </Routes>
             </div>
           </div>
