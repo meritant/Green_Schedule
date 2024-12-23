@@ -65,7 +65,7 @@ public class PdfService {
 	            warning.add("MINOR DEFECT - Proceed to yard when possible")
 	                    .setFontColor(ColorConstants.ORANGE)
 	                    .setBold();
-	        }
+	            }
 	        document.add(warning);
 
 	        // Add horizontal line
@@ -76,7 +76,7 @@ public class PdfService {
 	        Paragraph vehicleHeader = new Paragraph("Vehicle Information")
 	                .setFontSize(18)
 	                .setBold()
-	                .setFontColor(ColorConstants.BLUE)
+//	                .setFontColor(ColorConstants.BLUE)
 	                .setMarginBottom(10);
 	        document.add(vehicleHeader);
 
@@ -96,7 +96,7 @@ public class PdfService {
 	        document.add(new Paragraph("Reported Defects")
 	                .setFontSize(18)
 	                .setBold()
-	                .setFontColor(ColorConstants.BLUE)
+//	                .setFontColor(ColorConstants.BLUE)
 	                .setMarginBottom(10));
 
 	        // Defects details
@@ -112,7 +112,10 @@ public class PdfService {
 	            Cell severityLabel = new Cell().add(new Paragraph("Severity:")).setBorder(Border.NO_BORDER);
 	            Cell severityValue = new Cell().add(new Paragraph(item.getDefectOption().isMajorDefect() ? "Major" : "Minor")
 	                    .setFontColor(item.getDefectOption().isMajorDefect() ? ColorConstants.RED : ColorConstants.ORANGE))
-	                    .setBorder(Border.NO_BORDER);
+	                    .setBorder(Border.NO_BORDER)
+        				.setFontSize(14)
+    	                .setBold();
+
 	            defectTable.addCell(severityLabel);
 	            defectTable.addCell(severityValue);
 
@@ -136,7 +139,7 @@ public class PdfService {
 	        Paragraph reportInfoHeader = new Paragraph("Report Information")
 	                .setFontSize(18)
 	                .setBold()
-	                .setFontColor(ColorConstants.BLUE)
+//	                .setFontColor(ColorConstants.BLUE)
 	                .setMarginBottom(10);
 	        document.add(reportInfoHeader);
 
