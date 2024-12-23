@@ -15,13 +15,34 @@ function DefectReportList() {
 const [selectedReport, setSelectedReport] = useState(null);
 const [showModal, setShowModal] = useState(false);
 
+// States for filtered reports
+const [activeReports, setActiveReports] = useState([]);
+const [verifiedReports, setVerifiedReports] = useState([]);
 
 
+useEffect(() => {
+  const filterReports = (reports) => {
+    const active = reports.filter(report => report.status !== 'VERIFIED');
+    const verified = reports.filter(report => report.status === 'VERIFIED');
+    setActiveReports(active);
+    setVerifiedReports(verified);
+  };
+  
+  if (user.role === 'DRIVER') {
+    filterReports(reports.filter(report => report.reportedBy === user.username));
+  } else {
+    filterReports(reports);
+  }
+}, [reports, user]);
 
 
-  useEffect(() => {
+useEffect(() => {
+  console.log('User:', user); // Log user object
+  if (user) {
     fetchReports();
-  }, [user]);
+  }
+}, [user]);
+
 
   const handleStatusChange = async (reportId, newStatus) => {
     try {
@@ -245,7 +266,6 @@ const ReportModal = ({ report, onClose }) => {
     return (
       <div className="flex justify-center items-center h-full min-h-screen">
         <div className="text-gray-600">Loading...</div>
-      
       </div>
     );
   }
@@ -270,7 +290,8 @@ const ReportModal = ({ report, onClose }) => {
         )}
       </div>
       
-      {filteredReports.length === 0 ? (
+
+      {activeReports.length === 0 && verifiedReports.length === 0 ? (
         <div className="text-center py-10">
           <p className="text-gray-500">
             {user.role === 'SUPERVISOR' 
@@ -279,17 +300,21 @@ const ReportModal = ({ report, onClose }) => {
           </p>
         </div>
       ) : (
-        <div className="mt-8 flex flex-col">
-          <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-              <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300">
+      <>
+
+        {/* Active Reports Section */}
+        <div className="mb-8">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Active Reports</h2>
+            {activeReports.length > 0 ? (
+              <div className="mt-4 flex flex-col">
+                <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                      <table className="min-w-full divide-y divide-gray-300">
+
                   <thead className="bg-gray-50">
                     <tr>
-                      {/* <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Report #</th> */}
                       <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Vehicle</th>
-                      {/* <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Part</th> */}
-                      {/* <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Defect</th> */}
                       <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Severity</th>
                       {user.role === 'SUPERVISOR' && (
                         <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Reported By</th>
@@ -301,27 +326,20 @@ const ReportModal = ({ report, onClose }) => {
                       )}
                     </tr>
                   </thead>
+
                   <tbody className="divide-y divide-gray-200 bg-white">
-                    {filteredReports.map((report) => (
+                          {activeReports.map((report) => (
                       <tr key={report.id}>
-                        {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {report.reportNumber}
-                        </td> */}
+                        
                         <td 
-  className="whitespace-nowrap px-3 py-4 text-sm text-blue-600 underline cursor-pointer hover:text-blue-800"
-  onClick={() => {
-    setSelectedReport(report);
-    setShowModal(true);
-  }}
->
-  {report.vehicleNumber}
-</td>
-                        {/* <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {report.partName}
+                          className="whitespace-nowrap px-3 py-4 text-sm text-blue-600 underline cursor-pointer hover:text-blue-800"
+                          onClick={() => {
+                            setSelectedReport(report);
+                            setShowModal(true);
+                          }}
+                        >
+                          {report.vehicleNumber}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {report.defectDescription}
-                        </td> */}
                         <td className="whitespace-nowrap px-3 py-4 text-sm">
                           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
                             report.majorDefect 
@@ -390,14 +408,155 @@ const ReportModal = ({ report, onClose }) => {
 
                       </tr>
                     ))}
-                  </tbody>
-                </table>
+                   </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            ) : (
+              <p className="text-gray-500">No active reports</p>
+            )}
           </div>
-        </div>
-      )}
 
+
+           {/* Verified Reports Section */}
+          <div>
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Verified Reports</h2>
+            {verifiedReports.length > 0 ? (
+              <div className="mt-4 flex flex-col">
+                <div className="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                  <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+                    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+                      <table className="min-w-full divide-y divide-gray-300">
+                        
+                        {/* Existing table header */}
+                        <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Vehicle</th>
+                      <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Severity</th>
+                      {user.role === 'SUPERVISOR' && (
+                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Reported By</th>
+                      )}
+                      <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Date</th>
+                      <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
+                      {user.role === 'SUPERVISOR' && (
+                        <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Actions</th>
+                      )}
+                    </tr>
+                  </thead>
+
+
+
+                        <tbody className="divide-y divide-gray-200 bg-white">
+                          {verifiedReports.map((report) => (
+                            // Existing table row rendering, using verifiedReports
+
+
+
+
+                            <tr key={report.id}>
+                              {/* Existing table cell content */}
+                              <td 
+                                className="whitespace-nowrap px-3 py-4 text-sm text-blue-600 underline cursor-pointer hover:text-blue-800"
+                                onClick={() => {
+                                  setSelectedReport(report);
+                                  setShowModal(true);
+                                }}
+                              >
+                                {report.vehicleNumber}
+                              </td>
+                              {/* Rest of the table cells */}
+                              <td 
+                          className="whitespace-nowrap px-3 py-4 text-sm text-blue-600 underline cursor-pointer hover:text-blue-800"
+                          onClick={() => {
+                            setSelectedReport(report);
+                            setShowModal(true);
+                          }}
+                        >
+                          {report.vehicleNumber}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            report.majorDefect 
+                              ? 'bg-red-100 text-red-800' 
+                              : 'bg-yellow-100 text-yellow-800'
+                          }`}>
+                            {report.majorDefect ? 'Major' : 'Minor'}
+                          </span>
+                        </td>
+                        {user.role === 'SUPERVISOR' && (
+                          <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                            {report.reportedBy}
+                          </td>
+                        )}
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                          {report.reportedAt}
+                        </td>
+                        <td className="whitespace-nowrap px-3 py-4 text-sm">
+                          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            report.status === 'REPORTED' ? 'bg-yellow-100 text-yellow-800' :
+                            report.status === 'IN_PROGRESS' ? 'bg-blue-100 text-blue-800' :
+                            report.status === 'FIXED' ? 'bg-green-100 text-green-800' :
+                            'bg-gray-100 text-gray-800'
+                          }`}>
+                            {report.status}
+                          </span>
+                        </td>
+
+
+                        {/* Actions column in the table: */}
+
+
+                        {user.role === 'SUPERVISOR' && (
+    <td className="whitespace-nowrap px-3 py-4 text-sm space-x-2">
+        <select
+            value={report.status}
+            onChange={(e) => handleStatusChange(report.id, e.target.value)}
+            className="rounded-md border-gray-300 py-2 pl-3 pr-10 text-sm"
+        >
+            <option value="REPORTED">Reported</option>
+            <option value="IN_PROGRESS">In Progress</option>
+            <option value="FIXED">Fixed</option>
+            <option value="VERIFIED">Verified</option>
+        </select>
+        <button
+            onClick={() => {
+              setSelectedReport(report);
+              setShowModal(true);
+            }}
+            
+            className="text-indigo-600 hover:text-indigo-900 mx-2"
+        >
+            View
+        </button>
+        <button
+            onClick={() => handleDelete(report.id)}
+            className="text-red-600 hover:text-red-900"
+        >
+            Delete
+        </button>
+    </td>
+)}
+
+                        {/* Actions column in the table: END */}
+
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="text-gray-500">No verified reports</p>
+            )}
+          </div>
+          
+
+        </>
+      )}
 
 
 {/* Main renderer */}
