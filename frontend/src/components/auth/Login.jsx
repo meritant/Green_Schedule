@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 
 document.title = 'Log in';
 
-
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -29,6 +28,29 @@ function Login() {
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
+          
+        {/* Demo Account Information */}
+        <div className="mt-6 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg p-6 shadow-lg">
+            <h3 className="text-lg font-bold mb-3 text-center">🌟 Demo Accounts 🌟</h3>
+            <ul className="space-y-4">
+              <li className="flex items-center space-x-3">
+                <span className="bg-white text-blue-500 font-semibold rounded-full px-3 py-1 text-sm">
+                  DRIVER
+                </span>
+                <p className="flex-1">
+                  <strong>To file reports:</strong> Use username: <span className="font-mono">driver</span> and password: <span className="font-mono">123456</span>
+                </p>
+              </li>
+              <li className="flex items-center space-x-3">
+                <span className="bg-white text-indigo-500 font-semibold rounded-full px-3 py-1 text-sm">
+                  SUPERVISOR
+                </span>
+                <p className="flex-1">
+                  <strong>To manage reports, employees, and vehicles:</strong> Use username: <span className="font-mono">super</span> and password: <span className="font-mono">123456</span>
+                </p>
+              </li>
+            </ul>
+          </div>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (

@@ -38,6 +38,9 @@ function VehicleForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Disable vehicle creation for the demo
+  showNotification('error', 'Vehicle creation is disabled in the demo.');
+  return;
     try {
       const token = localStorage.getItem('token');
       const response = await fetch('/api/v1/vehicles', {

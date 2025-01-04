@@ -15,6 +15,9 @@ function EmployeeForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Disable employee creation for the demo
+  showNotification('error', 'Employee creation is disabled in the demo.');
+  return;
     try {
       const response = await fetch('/api/v1/auth/register', {
         method: 'POST',
