@@ -3,6 +3,8 @@ import { useAuth } from '../../context/AuthContext';
 import axiosInstance from '../../utils/axiosConfig';
 import LoadingSpinner from '../common/LoadingSpinner';
 
+document.title = 'Dashboard | GS';
+
 
 function Dashboard() {
   const { user } = useAuth();

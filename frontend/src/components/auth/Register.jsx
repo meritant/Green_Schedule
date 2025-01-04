@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosConfig';
 
+document.title = 'Register';
+
+
 function Register() {
   const [formData, setFormData] = useState({
     username: '',

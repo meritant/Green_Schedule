@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
+document.title = 'Log in';
+
+
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
