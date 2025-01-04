@@ -40,7 +40,7 @@ function DefectReportForm() {
            if (!response.ok) throw new Error('Failed to fetch vehicles');
            
            const data = await response.json();
-           console.log('Vehicles data:', data); // Add this
+           console.log('Vehicles data:', data); 
 
            // Filter only NORMAL status vehicles
            const availableVehicles = data.filter(vehicle => vehicle.status === 'NORMAL');

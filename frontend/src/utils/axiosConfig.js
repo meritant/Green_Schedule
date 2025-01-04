@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const axiosInstance = axios.create({
     baseURL: 'http://localhost:8080/api/v1',
-    withCredentials: true, // Add this line to enable credentials
+    withCredentials: true, // line to enable credentials
     headers: {
         'Content-Type': 'application/json'
     }
@@ -22,7 +22,7 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-// Optional: Add a response interceptor to handle CORS and authentication errors
+// handle CORS and authentication errors
 axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {
