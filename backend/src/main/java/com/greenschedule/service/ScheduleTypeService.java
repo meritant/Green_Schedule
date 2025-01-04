@@ -75,4 +75,9 @@ public class ScheduleTypeService {
     public boolean existsById(UUID id) {
         return scheduleTypeRepository.existsById(id);
     }
+    
+    public ScheduleType getByName(String name) {
+        return scheduleTypeRepository.findByName(name)
+            .orElseThrow(() -> new ResourceNotFoundException("Schedule type not found: " + name));
+    }
 }

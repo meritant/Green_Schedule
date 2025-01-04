@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -12,6 +13,9 @@ public class Schedule1InitializationService {
     private final ScheduleTypeService scheduleTypeService;
     private final PartService partService;
     private final DefectOptionService defectOptionService;
+    private final VehicleService vehicleService;
+
+    
 
     @Transactional
     public void initializeSchedule1() {
@@ -45,6 +49,7 @@ public class Schedule1InitializationService {
         initializeTires(schedule1);
         initializeWheelsHubsAndFasteners(schedule1);
         initializeWindshieldWiperWasher(schedule1);
+        initializeTrucks(schedule1);
     }
 
     private void createDefectOptions(Part part, List<String> defects, boolean isMajor) {
@@ -131,9 +136,6 @@ public class Schedule1InitializationService {
             .scheduleType(scheduleType)
             .build());
 
-        createDefectOptions(part, List.of(
-            "no minor defect"
-        ), false);
 
         createDefectOptions(part, List.of(
             "dangerous goods requirements not met"
@@ -150,9 +152,6 @@ public class Schedule1InitializationService {
             "accelerator pedal, clutch, gauges, audible and visual indicators or instruments fail to function properly"
         ), false);
 
-        createDefectOptions(part, List.of(
-            "no major defect"
-        ), true);
     }
 
     private void initializeDriverSeat(ScheduleType scheduleType) {
@@ -196,9 +195,7 @@ public class Schedule1InitializationService {
             "emergency equipment is missing, damaged or defective"
         ), false);
 
-        createDefectOptions(part, List.of(
-            "no major defect"
-        ), true);
+        
     }
 
     private void initializeExhaustSystem(ScheduleType scheduleType) {
@@ -273,9 +270,7 @@ public class Schedule1InitializationService {
             "required mirror or glass has broken or damaged attachments onto vehicle body"
         ), false);
 
-        createDefectOptions(part, List.of(
-            "no major defect"
-        ), true);
+        
     }
 
     private void initializeHeaterDefroster(ScheduleType scheduleType) {
@@ -303,9 +298,7 @@ public class Schedule1InitializationService {
             "vehicle has no operative horn"
         ), false);
 
-        createDefectOptions(part, List.of(
-            "no major defect"
-        ), true);
+       
     }
 
     private void initializeHydraulicBrakeSystem(ScheduleType scheduleType) {
@@ -423,6 +416,7 @@ public class Schedule1InitializationService {
     }
 
     private void initializeWindshieldWiperWasher(ScheduleType scheduleType) {
+
     	   Part part = partService.createIfNotExists(Part.builder()
     	       .name("Part 23. Windshield Wiper / Washer")
     	       .scheduleType(scheduleType)
@@ -437,4 +431,51 @@ public class Schedule1InitializationService {
     	       "When use of wipers or washer is required: wiper or washer fails to adequately clear driver's field of vision in area swept by driver's side wiper"
     	   ), true);
     	}
+
+    private void initializeTrucks(ScheduleType scheduleType) {
+        // Create a ScheduleType reference with the hardcoded ID
+        ScheduleType hardcodedSchedule = ScheduleType.builder()
+                .id(UUID.fromString("84d6d15f-9d60-4e0d-8a58-3a043daa3905"))
+                .build();
+
+        List<Vehicle> trucks = List.of(
+            createTruck("TRK001", "HT12345", "Mack", "Granite GU713", "2010", hardcodedSchedule),
+            createTruck("TRK002", "HT56789", "Peterbilt", "379", "2009", hardcodedSchedule),
+            createTruck("TRK003", "HT23456", "Kenworth", "T800", "2011", hardcodedSchedule),
+            createTruck("TRK004", "HT78901", "Freightliner", "Cascadia", "2008", hardcodedSchedule),
+            createTruck("TRK005", "HT34567", "Volvo", "VNL 670", "2007", hardcodedSchedule),
+            createTruck("TRK006", "HT89012", "Western Star", "4900EX", "2010", hardcodedSchedule),
+            createTruck("TRK007", "HT45678", "International", "ProStar", "2009", hardcodedSchedule),
+            createTruck("TRK008", "HT90123", "Mack", "Pinnacle CHU613", "2006", hardcodedSchedule),
+            createTruck("TRK009", "HT56789", "Peterbilt", "386", "2008", hardcodedSchedule),
+            createTruck("TRK010", "HT23457", "Kenworth", "W900", "2005", hardcodedSchedule)
+        );
+
+        for (Vehicle truck : trucks) {
+            try {
+                if (!vehicleService.existsByVehicleNumber(truck.getVehicleNumber())) {
+                    vehicleService.createVehicle(truck);
+                }
+            } catch (Exception e) {
+                System.err.println("Error creating truck: " + truck.getVehicleNumber() + " - " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private Vehicle createTruck(String vehicleNumber, String licensePlate, String make, 
+                              String model, String year, ScheduleType scheduleType) {
+        return Vehicle.builder()
+                .vehicleNumber(vehicleNumber)
+                .licensePlate(licensePlate)
+                .make(make)
+                .model(model)
+                .year(year)
+                .type(VehicleType.TRUCK)
+                .status(VehicleStatus.NORMAL)
+                .scheduleType(scheduleType)
+                .build();
+    }
+
+
 }

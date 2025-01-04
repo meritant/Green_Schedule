@@ -1,5 +1,6 @@
 package com.greenschedule.model.entity;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,4 +23,5 @@ public class ScheduleType {
     private String name;  // e.g., "Schedule 1", "Schedule 2"
 
     private String description;  // e.g., "For trucks", "For buses"
+    
 }

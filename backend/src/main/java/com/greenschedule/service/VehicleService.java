@@ -58,6 +58,11 @@ public class VehicleService {
         return vehicleRepository.save(vehicle);
     }
 
+    
+    public Vehicle createVehicle(Vehicle vehicle) {
+        return vehicleRepository.save(vehicle);
+    }
+    
     @Transactional
     public Vehicle updateVehicle(UUID id, Vehicle vehicleDetails) {
         Vehicle vehicle = getVehicleById(id);
@@ -110,4 +115,10 @@ public class VehicleService {
     public long countByStatus(VehicleStatus status) {
         return vehicleRepository.countByStatus(status);
     }
+    
+    public boolean existsByVehicleNumber(String vehicleNumber) {
+        return vehicleRepository.existsByVehicleNumber(vehicleNumber);
+    }
+    
+    
 }
