@@ -1,5 +1,6 @@
 services:
   schedule-frontend:
+    image: frontend
     platform: linux/amd64
     build: .
     container_name: schedule-frontend
