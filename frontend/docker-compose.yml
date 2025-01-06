@@ -3,7 +3,17 @@ services:
     image: frontend
     platform: linux/amd64
     build: .
-    container_name: schedule-frontend
+    container_name: frontend
     restart: unless-stopped
     ports:
       - "5173:5173"
+    # These env variables for production
+    environment:
+      - NODE_ENV=production
+      - VITE_API_URL=https://schedule.aclaney.com/api/v1
+    networks:
+      - green
+
+networks:
+  green:
+    external: true
